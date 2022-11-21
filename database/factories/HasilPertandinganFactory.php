@@ -19,7 +19,7 @@ class HasilPertandinganFactory extends Factory
     public function definition()
     {
         return [
-            'waktu' => rand(1,90),
+            'waktu_gol' => rand(1,90),
         ];
     }
 
