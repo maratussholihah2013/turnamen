@@ -33,7 +33,7 @@ class TimController extends BaseController
    
         $validator = Validator::make($input, [
             'nama' => 'required|string',
-            'logo' => 'required',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'tahun_berdiri' => 'required|digits:4|integer|min:1900|max:'.\Carbon\Carbon::now()->year,
             'alamat' => 'required',
             'kota' => 'required',
@@ -43,7 +43,16 @@ class TimController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
    
-        $tim = Tim::create($input);
+        $logoName = $input->nama.'_'.time().'.'.$input->logo->extension();
+        $input->logo->move(public_path('images'), $logoName);
+
+        $tim = Tim::create([
+            'nama' => $input->nama,
+            'logo' => $logoName,
+            'tahun_berdiri' => $input->tahun_berdiri,
+            'alamat' => $input->alamat,
+            'kota' => $input->kota,
+        ]);
    
         return $this->sendResponse(new TimResource($tim), 'Tim created successfully.');
     } 
@@ -78,7 +87,7 @@ class TimController extends BaseController
    
         $validator = Validator::make($input, [
             'nama' => 'required|string',
-            'logo' => 'required',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'tahun_berdiri' => 'required|digits:4|integer|min:1900|max:'.\Carbon\Carbon::now()->year,
             'alamat' => 'required',
             'kota' => 'required',
@@ -87,10 +96,13 @@ class TimController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-   
+
+        $logoName = $input->nama.'_'.time().'.'.$input->logo->extension();
+        $input->logo->move(public_path('images'), $logoName);
+
         $tim->update([
             'nama' => $input->nama,
-            'logo' => $input->logo,
+            'logo' => $logoName,
             'tahun_berdiri' => $input->tahun_berdiri,
             'alamat' => $input->alamat,
             'kota' => $input->kota,
