@@ -112,4 +112,28 @@ class JadwalPertandinganController extends BaseController
    
         return $this->sendResponse([], 'Jadwal Pertandingan deleted successfully.');
     }
+    //Get semua data yg sudah di soft delete
+    public function trash()
+    {
+        $jadwalpertandingans = JadwalPertandingan::onlyTrashed();
+
+        return $this->sendResponse(JadwalPertandinganResource::collection($jadwalpertandingans), 'Jadwal Pertandingan retrieved successfully.');
+    }
+    
+    //mengembalikan data jadwalpertandingan yang telah di soft delete
+    public function restore($id)
+    {
+        $jadwalpertandingan = JadwalPertandingan::onlyTrashed()->findOrFail($id);
+        $jadwalpertandingan->restore();
+        
+        return $this->sendResponse(new JadwalPertandinganResource($jadwalpertandingan), 'Jadwal Pertandingan updated successfully.');
+    }
+    
+    //menghapus permanen
+    public function delete($id)
+    {
+        $jadwalpertandingan = JadwalPertandingan::onlyTrashed()->findOrFail($id);
+        $jadwalpertandingan->forceDelete();
+        return $this->sendResponse([], 'Jadwal Pertandingan deleted permanently successfully.');
+    }
 }

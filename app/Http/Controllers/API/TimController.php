@@ -19,7 +19,7 @@ class TimController extends BaseController
     {
         $tims = Tim::all();
     
-        return $this->sendResponse(TimResource::collection($tims), 'Products retrieved successfully.');
+        return $this->sendResponse(TimResource::collection($tims), 'Tim retrieved successfully.');
     }
     /**
      * Store a newly created resource in storage.
@@ -111,5 +111,35 @@ class TimController extends BaseController
         $tim->delete();
    
         return $this->sendResponse([], 'Tim deleted successfully.');
+    }
+
+    //Get semua data yg sudah di soft delete
+    public function trash()
+    {
+        $tims = Tim::onlyTrashed();
+
+        return $this->sendResponse(TimResource::collection($tims), 'Tim retrieved successfully.');
+    }
+    
+    //mengembalikan data tim yang telah di soft delete
+    public function restore($id)
+    {
+        $tim = Tim::onlyTrashed()->findOrFail($id);
+        $tim->restore();
+        
+        return $this->sendResponse(new TimResource($tim), 'Tim updated successfully.');
+    }
+    
+    //menghapus permanen
+    public function delete($id)
+    {
+        $tim = Tim::onlyTrashed()->findOrFail($id);
+        
+        if($tim->logo){
+            \Storage::delete('public/storage/'.$tim->logo);
+        }
+        
+        $tim->forceDelete();
+        return $this->sendResponse([], 'Tim deleted permanently successfully.');
     }
 }

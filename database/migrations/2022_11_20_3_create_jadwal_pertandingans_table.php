@@ -27,6 +27,8 @@ return new class extends Migration
             
             //relation with tims table as tim home$table->foreign('tim_away')->references('id')->on('tim')->onDelete('cascade');
             $table->foreign('tim_away')->references('id')->on('tims')->onDelete('cascade');
+            //add softdelete
+            $table->softDeletes();
             
         });
     }

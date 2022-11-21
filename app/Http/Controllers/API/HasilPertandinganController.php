@@ -103,4 +103,29 @@ class HasilPertandinganController extends BaseController
    
         return $this->sendResponse([], 'Hasil Pertandingan deleted successfully.');
     }
+    
+    //Get semua data yg sudah di soft delete
+    public function trash()
+    {
+        $hasilpertandingans = HasilPertandingan::onlyTrashed();
+
+        return $this->sendResponse(HasilPertandinganResource::collection($hasilpertandingans), 'Hasil Pertandingan retrieved successfully.');
+    }
+    
+    //mengembalikan data hasilpertandingan yang telah di soft delete
+    public function restore($id)
+    {
+        $hasilpertandingan = HasilPertandingan::onlyTrashed()->findOrFail($id);
+        $hasilpertandingan->restore();
+        
+        return $this->sendResponse(new HasilPertandinganResource($hasilpertandingan), 'Hasil Pertandingan updated successfully.');
+    }
+    
+    //menghapus permanen
+    public function delete($id)
+    {
+        $hasilpertandingan = HasilPertandingan::onlyTrashed()->findOrFail($id);
+        $hasilpertandingan->forceDelete();
+        return $this->sendResponse([], 'Hasil Pertandingan deleted permanently successfully.');
+    }
 }

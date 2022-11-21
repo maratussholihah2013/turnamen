@@ -112,4 +112,28 @@ class PemainController extends BaseController
    
         return $this->sendResponse([], 'Pemain deleted successfully.');
     }
+    //Get semua data yg sudah di soft delete
+    public function trash()
+    {
+        $pemains = Pemain::onlyTrashed();
+
+        return $this->sendResponse(PemainResource::collection($pemains), 'Pemain retrieved successfully.');
+    }
+    
+    //mengembalikan data pemain yang telah di soft delete
+    public function restore($id)
+    {
+        $pemain = Pemain::onlyTrashed()->findOrFail($id);
+        $pemain->restore();
+        
+        return $this->sendResponse(new PemainResource($pemain), 'Pemain updated successfully.');
+    }
+    
+    //menghapus permanen
+    public function delete($id)
+    {
+        $pemain = Pemain::onlyTrashed()->findOrFail($id);
+        $pemain->forceDelete();
+        return $this->sendResponse([], 'Pemain deleted permanently successfully.');
+    }
 }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('kota');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

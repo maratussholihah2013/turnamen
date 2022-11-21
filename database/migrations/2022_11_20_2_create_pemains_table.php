@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreign('tim_id')->references('id')->on('tims')->onDelete('cascade');
             //agar nomor punggung tidak sama dlm 1 tim
             $table->unique(['tim_id', 'nomor_punggung']);
+            $table->softDeletes();
         });
     }
 

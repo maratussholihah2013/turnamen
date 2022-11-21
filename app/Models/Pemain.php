@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
   
 class Pemain extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
   
     /**
      * The attributes that are mass assignable.

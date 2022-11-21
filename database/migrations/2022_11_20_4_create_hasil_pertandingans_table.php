@@ -22,7 +22,8 @@ return new class extends Migration
             //relation with tims table
             $table->foreign('pemain_id')->references('id')->on('pemains')->onDelete('cascade');
             $table->foreign('jadwal_id')->references('id')->on('jadwal_pertandingans')->onDelete('cascade');
-            
+            //for softdelete field
+            $table->softDeletes();
         });
     }
 
