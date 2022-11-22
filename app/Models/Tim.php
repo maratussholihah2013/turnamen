@@ -4,6 +4,7 @@ namespace App\Models;
   
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
   
 class Tim extends Model
 {
@@ -15,15 +16,20 @@ class Tim extends Model
      * @var array
      */
     protected $fillable = [
-        'nama', 'logo', 'tahun','alamat','kota'
+        'nama', 'logo', 'tahun_berdiri','alamat','kota'
     ];
-    
+        
     public function pemains()
     {
         return $this->hasMany(Pemain::class);
     }
     
-    public function jadwals()
+    public function jadwalhomes()
+    {
+        return $this->hasMany(JadwalPertandingan::class);
+    }
+
+    public function jadwalaways()
     {
         return $this->hasMany(JadwalPertandingan::class);
     }

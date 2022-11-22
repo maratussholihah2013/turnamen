@@ -20,28 +20,27 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        \App\Models\User::factory(2)->create();
-        \App\Models\Tim::factory(5)->create()->each(function($t) {
-            $t->pemains()
-                ->saveMany(
-                    \App\Models\Pemain::factory(12)->make()
-                );
-            $t->jadwals()
-                ->saveMany(
-                    \App\Models\JadwalPertandingan::factory(5)->make()
-                )
-                ->each(function ($j) {
-                    $j->hasils()->saveMany(
-                                \App\Models\HasilPertandingan::factory(5)->make([
-                                    'pemain_id' =>\App\Models\Pemain::where('tim_id',$j->tim_home)->random()->id
-                                ])
-                            );
-                    $j->hasils()->saveMany(
-                                \App\Models\HasilPertandingan::factory(5)->make([
-                                    'pemain_id' =>\App\Models\Pemain::where('tim_id',$j->tim_away)->random()->id
-                                ])
-                            );
-                });
-        });  
+        \App\Models\User::factory(1)->create();
+        \App\Models\Tim::factory(3)->create();
+        \App\Models\Pemain::factory(40)->create();
+        \App\Models\JadwalPertandingan::factory(6)->create();
+        
+        $jadwals = \App\Models\JadwalPertandingan::all();
+        foreach ($jadwals as $jadwal) {
+            $pemains = \App\Models\Pemain::whereIn('tim_id',[$jadwal->tim_home,$jadwal->tim_away])->get();
+            $pemainsGol = $pemains->random(5);
+            foreach ($pemainsGol as $pemain) {                
+                \App\Models\HasilPertandingan::factory(rand(1,4))
+                                                ->create([
+                                                    'pemain_id' => $pemain->id,
+                                                    'jadwal_id' => $jadwal->id
+                                                ]);
+                if($pemain->tim_id == $jadwal->tim_home)
+                    $jadwal->update(['total_skor_home' => $jadwal->total_skor_home+1]);
+                else if($pemain->tim_id == $jadwal->tim_away)
+                    $jadwal->update(['total_skor_away' => $jadwal->total_skor_away+1]);
+                $jadwal->save();
+            }           
+        }
     }
 }

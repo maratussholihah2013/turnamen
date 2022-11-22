@@ -4,6 +4,7 @@ namespace App\Models;
   
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
   
 class HasilPertandingan extends Model
 {
@@ -20,7 +21,7 @@ class HasilPertandingan extends Model
         
     public function jadwal()
     {
-    	return $this->belongsTo(JadwalPertandingan::class);
+    	return $this->belongsTo(JadwalPertandingan::class,'jadwal_id');
     }
         
     public function pemain()

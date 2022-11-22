@@ -1,10 +1,11 @@
 <?php
   
 namespace App\Http\Resources;
+use App\Http\Resources\HasilsResource;
    
 use Illuminate\Http\Resources\Json\JsonResource;
   
-class PemainResource extends JsonResource
+class HasilPertandinganResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +16,13 @@ class PemainResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'pemain_id' => $this->pemain_id,
-            'waktu_gol' => $this->waktu_gol,
+            'tanggal' => $this->tanggal,          
+            'waktu' => $this->waktu,  
+            'tim_home' => $this->timhome->nama,  
+            'tim_away' => $this->timaway->nama,  
+            'skor_akhir' => $this->skor_akhir,
+            'hasils'=> HasilsResource::collection($this->hasils),
+
         ];
     }
 }

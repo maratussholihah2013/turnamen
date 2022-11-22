@@ -4,6 +4,7 @@ namespace App\Models;
   
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
   
 class JadwalPertandingan extends Model
 {
@@ -22,12 +23,17 @@ class JadwalPertandingan extends Model
     
     public function hasils()
     {
-        return $this->hasMany(HasilPertandingan::class);
+        return $this->hasMany(HasilPertandingan::class,'jadwal_id');
     }
     
-    public function tim()
+    public function timhome()
     {
-    	return $this->belongsTo(Tim::class);
+    	return $this->belongsTo(Tim::class,'tim_home');
+    }
+
+    public function timaway()
+    {
+    	return $this->belongsTo(Tim::class,'tim_away');
     }
 
     public function getStatusAttribute(){
@@ -36,10 +42,12 @@ class JadwalPertandingan extends Model
         elseif ($this->total_skor_home < $this->total_skor_away)
             return "Tim Away Menang";
         else
-            return "Draw"
+            return "Draw";
     }
 
     public function getSkorAkhirAttribute(){
-        return $this->total_skor_home.':'.$this->total_skor_away
+        return $this->total_skor_home.':'.$this->total_skor_away;
     }
+
+
 }

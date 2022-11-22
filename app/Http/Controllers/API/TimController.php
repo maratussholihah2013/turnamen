@@ -42,16 +42,15 @@ class TimController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-   
-        $logoName = $input->nama.'_'.time().'.'.$input->logo->extension();
-        $input->logo->move(public_path('images'), $logoName);
+        $logoName = $input['nama'].'_'.time().'.'.$input['logo']->extension();
+        $input['logo']->move(public_path('storage'), $logoName);
 
         $tim = Tim::create([
-            'nama' => $input->nama,
+            'nama' => $input['nama'],
             'logo' => $logoName,
-            'tahun_berdiri' => $input->tahun_berdiri,
-            'alamat' => $input->alamat,
-            'kota' => $input->kota,
+            'tahun_berdiri' => $input['tahun_berdiri'],
+            'alamat' => $input['alamat'],
+            'kota' => $input['kota'],
         ]);
    
         return $this->sendResponse(new TimResource($tim), 'Tim created successfully.');
@@ -84,7 +83,6 @@ class TimController extends BaseController
     public function update(Request $request, Tim $tim)
     {
         $input = $request->all();
-   
         $validator = Validator::make($input, [
             'nama' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -97,15 +95,15 @@ class TimController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
 
-        $logoName = $input->nama.'_'.time().'.'.$input->logo->extension();
-        $input->logo->move(public_path('images'), $logoName);
+        $logoName = $input['nama'].'_'.time().'.'.$input['logo']->extension();
+        $input['logo']->move(public_path('storage'), $logoName);
 
         $tim->update([
-            'nama' => $input->nama,
+            'nama' => $input['nama'],
             'logo' => $logoName,
-            'tahun_berdiri' => $input->tahun_berdiri,
-            'alamat' => $input->alamat,
-            'kota' => $input->kota,
+            'tahun_berdiri' => $input['tahun_berdiri'],
+            'alamat' => $input['alamat'],
+            'kota' => $input['kota'],
         ]);
         $tim->save();
    
@@ -128,8 +126,7 @@ class TimController extends BaseController
     //Get semua data yg sudah di soft delete
     public function trash()
     {
-        $tims = Tim::onlyTrashed();
-
+        $tims = Tim::onlyTrashed()->get();
         return $this->sendResponse(TimResource::collection($tims), 'Tim retrieved successfully.');
     }
     

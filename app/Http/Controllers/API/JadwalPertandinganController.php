@@ -42,7 +42,7 @@ class JadwalPertandinganController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
    
-        $jadwalpertandingan = Product::create($input);
+        $jadwalpertandingan = JadwalPertandingan::create($input);
    
         return $this->sendResponse(new JadwalPertandinganResource($jadwalpertandingan), 'Jadwal Pertandingan created successfully.');
     } 
@@ -80,21 +80,13 @@ class JadwalPertandinganController extends BaseController
             'waktu' => 'required|date_format:H:i',
             'tim_home' => 'required|exists:tims,id',
             'tim_away' => 'required|exists:tims,id|different:tim_home',
-            'total_skor_home' => 'required|numeric',
-            'total_skor_away' => 'required|numeric',
         ]);
    
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
    
-        $jadwalpertandingan->update([
-            'nama' => $input->nama,
-            'tinggi_badan' => $input->tinggi_badan,
-            'berat_badan' => $input->berat_badan,
-            'posisi' => $input->posisi,
-            'nomor_punggung' => $input->nomor_punggung,
-        ]);
+        $jadwalpertandingan->update($input);
         $jadwalpertandingan->save();
    
         return $this->sendResponse(new JadwalPertandinganResource($jadwalpertandingan), 'Jadwal Pertandingan updated successfully.');
@@ -115,7 +107,7 @@ class JadwalPertandinganController extends BaseController
     //Get semua data yg sudah di soft delete
     public function trash()
     {
-        $jadwalpertandingans = JadwalPertandingan::onlyTrashed();
+        $jadwalpertandingans = JadwalPertandingan::onlyTrashed()->get();
 
         return $this->sendResponse(JadwalPertandinganResource::collection($jadwalpertandingans), 'Jadwal Pertandingan retrieved successfully.');
     }

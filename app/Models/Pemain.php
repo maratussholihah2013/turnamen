@@ -4,6 +4,7 @@ namespace App\Models;
   
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
   
 class Pemain extends Model
 {
@@ -15,7 +16,7 @@ class Pemain extends Model
      * @var array
      */
     protected $fillable = [
-        'nama', 'tinggi_badan', 'berat_badan','posisi','nomor_punggung'
+        'nama', 'tinggi_badan', 'berat_badan','posisi','nomor_punggung','tim_id'
     ];
     
     public function hasils()

@@ -21,6 +21,7 @@ class PemainResource extends JsonResource
             'berat_badan' => $this->berat_badan,
             'posisi' => $this->posisi,
             'nomor_punggung' => $this->nomor_punggung,
+            'tim' => $this->tim->nama,
         ];
     }
 }

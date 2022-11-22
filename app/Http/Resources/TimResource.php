@@ -18,7 +18,7 @@ class TimResource extends JsonResource
             'id' => $this->id,
             'nama' => $this->nama,
             'logo' => $this->logo,
-            'tahun' => $this->tahun,
+            'tahun_berdiri' => $this->tahun_berdiri,
             'alamat' => $this->alamat,
             'kota' => $this->kota,
         ];

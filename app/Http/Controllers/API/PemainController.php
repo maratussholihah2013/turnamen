@@ -17,7 +17,7 @@ class PemainController extends BaseController
      */
     public function index()
     {
-        $pemains = Pemain::all();
+        $pemains = Pemain::with(['tim'])->get();
     
         return $this->sendResponse(PemainResource::collection($pemains), 'Pemain retrieved successfully.');
     }
@@ -29,23 +29,24 @@ class PemainController extends BaseController
      */
     public function store(Request $request)
     {
-        $pemain = $request->all();
+        $input = $request->all();
    
         $validator = Validator::make($input, [
             'nama' => 'required|string',
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'posisi' => 'required|in:penyerang,gelandang,bertahan,penjaga gawang',
-            'nomor_punggung' => 'required|numeric|min:1|unique:pemains,nomor_punggung,null,id,tim_id,null',
+            'nomor_punggung' => 'required|numeric|min:1|unique:pemains,nomor_punggung,NULL,id,tim_id,'.$input['tim_id'],
+            'tim_id' => 'required|numeric|exists:tims,id',
         ]);
    
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
    
-        $product = Product::create($pemain);
+        $pemain = Pemain::create($input);
    
-        return $this->sendResponse(new PemainResource($product), 'Pemain created successfully.');
+        return $this->sendResponse(new PemainResource($pemain), 'Pemain created successfully.');
     } 
    
     /**
@@ -56,7 +57,7 @@ class PemainController extends BaseController
      */
     public function show($id)
     {
-        $pemain = Pemain::find($id);
+        $pemain = Pemain::with(['tim'])->find($id);
   
         if (is_null($pemain)) {
             return $this->sendError('Pemain not found.');
@@ -81,7 +82,8 @@ class PemainController extends BaseController
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'posisi' => 'required|in:penyerang,gelandang,bertahan,penjaga gawang',
-            'nomor_punggung' => 'required|numeric|min:1|unique:pemains,nomor_punggung,'.$this->id.',id,tim_id,null',
+            'nomor_punggung' => 'required|numeric|min:1|unique:pemains,nomor_punggung,'.$pemain->id.',id,tim_id,'.$input['tim_id'],
+            'tim_id' => 'required|numeric|exists:tims,id',
         ]);
    
         if($validator->fails()){
@@ -89,11 +91,11 @@ class PemainController extends BaseController
         }
    
         $pemain->update([
-            'nama' => $input->nama,
-            'tinggi_badan' => $input->tinggi_badan,
-            'berat_badan' => $input->berat_badan,
-            'posisi' => $input->posisi,
-            'nomor_punggung' => $input->nomor_punggung,
+            'nama' => $input['nama'],
+            'tinggi_badan' => $input['tinggi_badan'],
+            'berat_badan' => $input['berat_badan'],
+            'posisi' => $input['posisi'],
+            'nomor_punggung' => $input['nomor_punggung'],
         ]);
         $pemain->save();
    
@@ -115,7 +117,7 @@ class PemainController extends BaseController
     //Get semua data yg sudah di soft delete
     public function trash()
     {
-        $pemains = Pemain::onlyTrashed();
+        $pemains = Pemain::onlyTrashed()->get();
 
         return $this->sendResponse(PemainResource::collection($pemains), 'Pemain retrieved successfully.');
     }

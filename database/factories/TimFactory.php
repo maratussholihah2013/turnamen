@@ -18,9 +18,9 @@ class TimFactory extends Factory
     public function definition()
     {
         return [
-            'nama' => fake()->name(),
-            'logo' => fake()->image('public/storage/',400,400, null, false),
-            'tahun_berdiri' => fake()->year($max = 'now')  ,
+            'nama' => fake()->company(),
+            'logo' => 'dummy.jpg',
+            'tahun_berdiri' => fake()->date($format = 'Y', $max = 'now'),
             'alamat' => fake() ->address(),
             'kota' => fake()->city(),
         ];
