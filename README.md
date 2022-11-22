@@ -10,4 +10,4 @@ Deployment Steps:
     - php artisan cache:clear
     - php artisan storage:link
     - php artisan migrate:fresh --seed
-6. Open browser, type yourserver/turnamen/public
+6. Follow API documentation
